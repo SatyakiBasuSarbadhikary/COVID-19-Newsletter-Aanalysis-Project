@@ -4,64 +4,11 @@ library(tidyverse)
 library(ggplot2)
 library(vars)
 
-# set working directory
-#setwd("~/OneDrive - Indian Institute of Management/RESEARCH/COVID/Twitter_network_model/")
-setwd("C:\\Users\\Satyaki Basu\\Indian Institute of Management\\Deb, Soudeep - Twitter_network_model")
 
-# read folder names in the newsletter directory
-folders = list.files("RESEARCH MATERIAL FOR PROFESSOR DEEPTHI/")
+# Set working directory to the project folder (assumes script is inside the project)
+setwd("path/to/your/project/folder")
 
-# assigning simpler names
-folders_simple = folders
-folders_simple[1] = 'AWARENESS'
-folders_simple[2] = 'PSYCHOSOCIAL'
-folders_simple[6] = 'INSPIRATIONAL'
-folders_simple[7] = 'OFFICIAL'
-folders_simple[8] = 'TRAINING'
-folders_simple[9] = 'TRAVEL_ADVISORY'
-
-# initiate a list
-date_list = list()
-
-# prepare the dataset
-for (j in 1:length(folders)){
-  
-  # set path
-  path = paste(c("RESEARCH MATERIAL FOR PROFESSOR DEEPTHI/",folders[j],"/"),collapse = "")
-  
-  # read all file names in the path
-  fnames = list.files(path)
-  
-  # clean the file names and get the dates
-  alldates = as.Date(unlist(sapply(fnames,FUN = function(x) as.Date(as.character(substr(x,1,10)),format = "%d.%m.%Y"))))
-  names(alldates) = NULL
-  na_idx = which(is.na(alldates))
-  
-  # clean the file names, get the topics and remove NAs
-  alltxts = unlist(sapply(fnames,FUN = function(x) as.character(substr(x,11,str_length(x)))))
-  if (! is_empty(na_idx)){
-    alldates = alldates[-na_idx]
-    alltxts = alltxts[-na_idx]
-  }
-  
-  # merge the dates with the topic and add a sequence number
-  date_list[[j]] = data.frame(
-    date = alldates,
-    theme = folders_simple[j],
-    topic = alltxts
-  ) %>%
-    group_by(date) %>%
-    mutate(
-      index_within_date = 1:n()
-    )
-  
-}
-
-# create a comprehensive data frame 
-df = do.call(rbind,date_list)
-df = df[order(df$date),]
-#string split with  dot.remove last part and rejoin the rest.use sentiment anlysis on tfdm
-# do a frequency plot
+ # frequency plot
 df %>%
   group_by(date,theme) %>%
   mutate(
