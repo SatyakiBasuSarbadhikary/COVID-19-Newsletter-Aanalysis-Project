@@ -7,7 +7,8 @@ library(vars)
 
 # Set working directory to the project folder (assumes script is inside the project)
 setwd("path/to/your/project/folder")
-
+#we define dataset as df.
+df=read_csv("dataset_newsletter_2026.csv")
  # frequency plot
 df %>%
   group_by(date,theme) %>%
